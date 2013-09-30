@@ -6,12 +6,12 @@ This application takes the developer through the process of building a web-appli
 angular and d3 graph visualization library.
 
 
-## Workings of the application
-
-- There is no backend (no server) for this application. Instead we fake the XHRs by fetching
-  static csv files.
-- Read the Development section at the end to familiarize yourself with running and developing
-  an angular application.
+### Running the app during development
+There is no backend (no server) for this application. Instead we fake the XHRs by fetching
+static csv files.
+1. run `./scripts/web-server.js`
+2. navigate your browser to `http://localhost:8000/app/index.html` to see the app running in your
+   browser.
 
 ## Application Directory Layout
 
