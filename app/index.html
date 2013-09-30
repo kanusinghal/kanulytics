@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title>Kanulytics</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/nv.d3.css"/>
+  <script src="lib/angular/angular.js"></script>
+  <script src="lib/d3/d3.js"></script>
+  <script src="lib/nv.d3/nv.d3.js"></script>
+  <script src="js/angularjs-nvd3-directives.js"></script>
+  <script src="js/csvtoarray.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/services.js"></script>
+</head>
+
+<body ng-controller="AppController">
+  <div ng-controller="ChartCtrl">
+    <span class="label">Chart Type - </span>
+    <select ng-model="chart" ng-options="chart for chart in charts">
+    </select><br/><br/>
+    <div>
+      <span class="label">Country Selection List </span></br>
+      <div class="select-container">
+        <span ng-repeat="country in countries">
+          <label class="checkbox" for="{{country.index}}">
+            <input type="checkbox" ng-model="selection.ids[country.index]" name="group" id="{{country.index}}" />
+            {{country.country}}
+          </label></br>
+        </span>
+      </div></br>
+      <div ng-show="chart=='Line Chart'" class="chart-container">
+        <nvd3-line-chart
+                data="lineChartData"
+                id="lineChart"
+                width="800"
+                height="400"
+                showXAxis="true"
+                showYAxis="true"
+                tooltips="true"
+                margin="{left:80,top:50,bottom:50,right:50}"
+                showLegend="true"
+                xAxisTickFormat="xAxisTickFormat()"
+                interactive="true"
+                tooltips="true"
+                tooltipcontent="toolTipContentFunction()" 
+                >
+            <svg></svg>
+        </nvd3-line-chart>
+      </div>
+      <div ng-show="chart=='Scatter Chart'" class="chart-container">
+        <nvd3-scatter-chart
+                data="scatterChartData"
+                id="scatterChart"
+                width="800"
+                height="400"
+                tooltips="true"
+                margin="{left:80,top:50,bottom:50,right:50}"
+                showLegend="true"
+                interactive="true"
+                tooltipContent="tooltipXContentFunction()">
+            <svg></svg>
+        </nvd3-scatter-chart>
+      </div>
+    </div>
+  </div>
+  <div class="table-container">
+    <div class="table-label">Population Stats from 1960 - 2011 </div>
+    <div id="wrapper">
+      <table>
+        <tr>
+          <th>Country Name</th>
+          <th ng-repeat="key in keys">
+            {{key}}
+          </th> 
+        </tr>
+        <tr ng-repeat="data in dataSet">
+          <td>{{data['Country Name']}}</td>
+          <td ng-repeat="key in keys">
+            {{data[key]}}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
