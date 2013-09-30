@@ -1,4 +1,4 @@
-# An AngularJS based analytics application using NvD3 Graph Visualizations
+## An AngularJS based analytics application using NvD3 Graph Visualizations
 
 ## Overview
 
