@@ -10935,7 +10935,8 @@ nv.models.scatter = function() {
           .attr('width', availableWidth)
           .attr('height', availableHeight);
 
-      g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+      g.attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '')
+           .attr('id', 'clips');
 
 
       function updateInteractiveLayer() {
@@ -10969,7 +10970,6 @@ nv.models.scatter = function() {
 
         //inject series and point index for reference into voronoi
         if (useVoronoi === true) {
-
           if (clipVoronoi) {
             var pointClipsEnter = wrap.select('defs').selectAll('.nv-point-clips')
                 .data([id])
@@ -11020,7 +11020,9 @@ nv.models.scatter = function() {
           var pointPaths = wrap.select('.nv-point-paths').selectAll('path')
               .data(voronoi);
           pointPaths.enter().append('path')
-              .attr('class', function(d,i) { return 'nv-path-'+i; });
+              .attr('class', function(d,i) { return 'nv-path-'+i; })
+              .attr("class", "voronoi")
+              .attr("id", function(d, i) { return "path-"+i; });;
           pointPaths.exit().remove();
           pointPaths
               .attr('d', function(d) {
@@ -11056,6 +11058,39 @@ nv.models.scatter = function() {
               .on('mouseout', function(d, i) {
                 mouseEventCallback(d, dispatch.elementMouseout);
               });
+           var brush = d3.svg.polybrush()
+               .x(d3.scale.linear().range([0, width]))
+               .y(d3.scale.linear().range([0, height]))
+               .on("brushstart", function() {
+                 gEnter.select(".nvd3 .nv-wrap .nv-scatter")
+                     .selectAll(".selected").classed("selected", false);
+               })
+               .on("brush", function() {
+                 // set the 'selected' class for the circle
+                 gEnter.selectAll(".nv-groups .nv-group").selectAll('path').classed("selected", function(d) {
+                   //get the associated circle
+                   var id = d3.select(this).attr("id");
+                   var i = id.substr(id.indexOf("-")+1, id.length);
+                   var vornoi = gEnter.select(".nv-point-paths").select("#path-"+i);
+                   // set the 'selected' class for the path
+                   var hash = {};
+                   if (brush.isWithinExtent(x0(getX(d,i)), y0(getY(d,i)))) {
+                     vornoi.classed("selected", true);
+                     // bad way..but things work for now.
+                     hash[d.x] = d.y;
+                     for(var key in hash) {
+                       console.log('Data year: ' + key + ' value: ' + hash[key]);
+                     }
+                     return true;
+                   } else {
+                     vornoi.classed("selected", false);
+                     return false;
+                   }
+                });
+                });
+                gEnter.append('g') 
+                    .attr("class", "brush")
+                    .call(brush);
 
 
         } else {
@@ -11151,6 +11186,7 @@ nv.models.scatter = function() {
             .attr('r', function(d,i) { return Math.sqrt(z(getSize(d,i))/Math.PI) });
         points.exit().remove();
         groups.exit().selectAll('path.nv-point').transition()
+            .attr("id", function(d, i) { return "point-"+i; })
             .attr('cx', function(d,i) { return nv.utils.NaNtoZero(x(getX(d,i))) })
             .attr('cy', function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
             .remove();
@@ -11180,7 +11216,8 @@ nv.models.scatter = function() {
               d3.svg.symbol()
                 .type(getShape)
                 .size(function(d,i) { return z(getSize(d,i)) })
-            );
+            )
+            .attr("id", function(d, i) { return "point-"+i; });
         points.exit().remove();
         groups.exit().selectAll('path.nv-point')
             .transition()
@@ -11629,13 +11666,14 @@ nv.models.scatterChart = function() {
 
       // background for pointer events
       gEnter.append('rect').attr('class', 'nvd3 nv-background');
-
+      
       gEnter.append('g').attr('class', 'nv-x nv-axis');
       gEnter.append('g').attr('class', 'nv-y nv-axis');
       gEnter.append('g').attr('class', 'nv-scatterWrap');
       gEnter.append('g').attr('class', 'nv-distWrap');
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-controlsWrap');
+
 
       //------------------------------------------------------------
 

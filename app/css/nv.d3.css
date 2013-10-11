@@ -753,3 +753,27 @@ Interactive Layer
 .nvd3 line.nv-guideline {
   stroke: #ccc;
 }
+
+.brush .extent {
+  stroke: #000;
+  stroke-width: 1.5px;
+  fill: #000;
+  fill-opacity: 0.3;
+}
+.nv-point-paths.voronoi {
+  fill: steelblue; 
+  fill-opacity: 0.4;
+  stroke: steelblue;
+  stroke-opacity: 0.5;
+}
+.nv-point-paths.voronoi.selected {
+  fill: red; 
+  fill-opacity: 0.4;
+  stroke: darkred;
+  stroke-opacity: 0.5;
+}
+.nv-point.selected {
+  fill: red;
+  stroke: darkred;
+  stroke-width: 1;
+}

@@ -127,7 +127,7 @@ function ChartCtrl($scope, DataSource){
         });
       };
     } 
-    
+
     $scope.tooltipXContentFunction = function(){
       return function(key, x, y) {
         return '<strong>YO!' + x + '</strong>'

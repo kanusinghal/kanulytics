@@ -46,3 +46,5 @@ static csv files.
 ![With Line Chart selection](http://i.imgur.com/Ayfb3Dz.png)
 
 ![With Scatter Chart selection](http://i.imgur.com/d9MVDy0.png)
+
+![With Scatter Chart Lasso selection](http://i.imgur.com/pYQgS68.png)
